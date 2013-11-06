@@ -1,5 +1,6 @@
 #include <klone/context.h>
-//#include "globals.h"
+
+const char UNPACK_DIR[] = "/tmp/kloned";
 
 const char SELECT_AUTHORS_BY_LETTER[] = 
 	"select substr(SearchName,1,1) as alpha, count(1) from Authors group by substr(SearchName,1,1)";
@@ -40,12 +41,16 @@ int server_init()
 	prepare_statement (db, &db_s->st_books_by_author, SELECT_BOOKS_BY_AUTHOR);
 	prepare_statement (db, &db_s->st_book_file_by_id, SELECT_BOOK_FILE_BY_ID);
 	err ("server_init complete %X, %s\n", &db_s, sqlite3_db_filename (db, "main"));
+	mkdir (UNPACK_DIR, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	return 0;
 }
 
 int server_term()
 {
 	sqlite3_close (db_s->db);
+	char syscmd[100];
+	sprintf (syscmd, "rm -rf %s", UNPACK_DIR);
+	system (syscmd);
 	err ("server_term complete\n");
 	return 0;             
 }

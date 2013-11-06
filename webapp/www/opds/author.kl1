@@ -42,7 +42,7 @@
  <dc:format>fb2+zip</dc:format>
  <dc:issued>2010</dc:issued>
  <content type="text/html"></content>
- <link href="/book.kl1?id=<%= id %>" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <link href="/opds/book.kl1?id=<%= id %>" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
 </entry>
 <%
  	}

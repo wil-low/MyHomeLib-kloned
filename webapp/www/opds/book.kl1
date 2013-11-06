@@ -6,25 +6,18 @@
 	static database_t db_s_;
 	database_t* db_s = &db_s_;
 %><%
-	err ("1\n");
-	err ("db %X\n", &db_s);
 	vars_t* vars = request_get_getargs (request);
  	const char* book_id_str = vars_get_value (vars, "id");
  	int book_id = atoi (book_id_str);
-	err ("2\n");
 	sqlite3_reset (db_s->st_book_file_by_id);
-	err ("3\n");
 	sqlite3_bind_int (db_s->st_book_file_by_id, 1, book_id);
-	err ("4\n");
 	int rc = sqlite3_step(db_s->st_book_file_by_id);
-	err ("5\n");
 	if (rc == SQLITE_ROW) {
 		err ("6\n");
 		const char* folder = sqlite3_column_text (db_s->st_book_file_by_id, 0);
 		const char* filename = sqlite3_column_text (db_s->st_book_file_by_id, 1);
 		const char* ext = sqlite3_column_text (db_s->st_book_file_by_id, 2);
-		mkdir ("/tmp/kloned", S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-		chdir ("/tmp/kloned");
+		chdir (UNPACK_DIR);
 		char syscmd[2048];
 		sprintf (syscmd, "unzip %s/%s %s%s", 
 			u_config_get_subkey_value (ctx->config, "library_path"), folder, filename, ext);
@@ -37,21 +30,35 @@
 		system (syscmd);
 		err ("%s\n", syscmd);
 
+		sprintf (syscmd, "rm %s%s", filename, ext);
+		system (syscmd);
+
+		struct stat zip_stat;
+		stat (zip_filename, &zip_stat);
+
 		response_set_content_type (response, "application/x-fictionbook");
-		response_print_header (response);
-/*
+		char zip_size_str[20];
+		sprintf (zip_size_str, "%d", zip_stat.st_size);
+		response_set_field (response, "Content-Length", zip_size_str);
+		char attachment[200];
+		sprintf (attachment, "attachment; filename=\"%s\"", zip_filename);
+		response_set_field (response, "Content-Disposition", attachment);
+		response_set_field (response, "Content-Transfer-Encoding", "binary");
+
 		io_t* io = response_io (response);
 		io_t* book_io;
-		u_file_open (zip_filename, O_RDONLY, &book_io);
-		io_pipe (book_io, io);
-		io_close (book_io);
-		io_free (book_io);*/
+		if (u_file_open (zip_filename, O_RDONLY, &book_io) == 0) {
+			io_pipe (io, book_io);
+			io_close (book_io);
+		}
+		else {
+			err ("Cannot open file %s\n", zip_filename);
+		}
+		io_free (book_io);
 	}
 	else {
-		err ("7\n");
 		err ("Can't execute: %s (%d)\n", sqlite3_errmsg(db_s->db), rc);
 	}
-	err ("8\n");
 	sqlite3_finalize (db_s->st_book_file_by_id);
 %>
 
