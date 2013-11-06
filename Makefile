@@ -1,0 +1,10 @@
+KLONE_VERSION ?= 3.1.0
+
+# webapp content is in webapp/ the current dir
+WEBAPP_DIR = $(CURDIR)/webapp
+WEBAPP_LDFLAGS = -lsqlite3
+
+include klapp.mk
+
+klapp.mk: ; wget -O $@ -c http://koanlogic.com/klone/klapp.mk
+
