@@ -11,14 +11,13 @@
 <link href="/opds/search?searchTerm={searchTerms}" rel="search" type="application/atom+xml" />
 <link href="/opds" rel="start" type="application/atom+xml;profile=opds-catalog" />
 <%
-	extern database_t db_s;
-	sqlite3_reset (db_s.st_authors_by_letter);
-	while (sqlite3_step(db_s.st_authors_by_letter) == SQLITE_ROW) {
-		const char* alpha = sqlite3_column_text (db_s.st_authors_by_letter, 0);
+	sqlite3_reset (db_s->st_authors_by_letter);
+	while (sqlite3_step(db_s->st_authors_by_letter) == SQLITE_ROW) {
+		const char* alpha = sqlite3_column_text (db_s->st_authors_by_letter, 0);
 		char alpha_html[20];
 		u_urlncpy (alpha_html, alpha, strlen(alpha), URLCPY_ENCODE);
 		char count[20];
-		sprintf (count, "%d", sqlite3_column_int (db_s.st_authors_by_letter, 1));
+		sprintf (count, "%d", sqlite3_column_int (db_s->st_authors_by_letter, 1));
 %>
 <entry> <updated>2013-11-05T10:07:29+01:00</updated>
  <id>tag:authors:<%= alpha %></id>
@@ -28,6 +27,6 @@
 </entry>
 <%
  	}
- 	sqlite3_finalize (db_s.st_authors_by_letter);
+ 	sqlite3_finalize (db_s->st_authors_by_letter);
 %>
 </feed>

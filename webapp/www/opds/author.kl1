@@ -5,15 +5,14 @@
 %>
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog"> <id>tag:root:authors</id>
 <%
-	extern database_t db_s;
  	vars_t* vars = request_get_getargs (request);
  	const char* author_id_str = vars_get_value (vars, "id");
  	int author_id = atoi (author_id_str);
-	sqlite3_reset (db_s.st_author_by_id);
-	sqlite3_bind_int (db_s.st_author_by_id, 1, author_id);
-	sqlite3_step(db_s.st_author_by_id);
-	const char* last_name = sqlite3_column_text (db_s.st_author_by_id, 0);
-	const char* first_name = sqlite3_column_text (db_s.st_author_by_id, 1);
+	sqlite3_reset (db_s->st_author_by_id);
+	sqlite3_bind_int (db_s->st_author_by_id, 1, author_id);
+	sqlite3_step(db_s->st_author_by_id);
+	const char* last_name = sqlite3_column_text (db_s->st_author_by_id, 0);
+	const char* first_name = sqlite3_column_text (db_s->st_author_by_id, 1);
 %>
 <title>Книги автора <%= last_name %> <%= first_name %></title>
 <updated>2013-11-05T10:07:28+01:00</updated>
@@ -22,12 +21,12 @@
 <link href="/opds/search?searchTerm={searchTerms}" rel="search" type="application/atom+xml" />
 <link href="/opds" rel="start" type="application/atom+xml;profile=opds-catalog" />
 <%
-	sqlite3_reset (db_s.st_books_by_author);
-	sqlite3_bind_int (db_s.st_books_by_author, 1, author_id);
-	while (sqlite3_step(db_s.st_books_by_author) == SQLITE_ROW) {
+	sqlite3_reset (db_s->st_books_by_author);
+	sqlite3_bind_int (db_s->st_books_by_author, 1, author_id);
+	while (sqlite3_step(db_s->st_books_by_author) == SQLITE_ROW) {
 		char id[20];
-		sprintf (id, "%d", sqlite3_column_int (db_s.st_books_by_author, 0));
-		const char* title = sqlite3_column_text (db_s.st_books_by_author, 1);
+		sprintf (id, "%d", sqlite3_column_int (db_s->st_books_by_author, 0));
+		const char* title = sqlite3_column_text (db_s->st_books_by_author, 1);
 %>
 <entry> <updated>2013-11-05T10:12:55+01:00</updated>
  <id>tag:book:<%= id %></id>
@@ -47,7 +46,7 @@
 </entry>
 <%
  	}
- 	sqlite3_finalize (db_s.st_author_by_id);
- 	sqlite3_finalize (db_s.st_books_by_author);
+ 	sqlite3_finalize (db_s->st_author_by_id);
+ 	sqlite3_finalize (db_s->st_books_by_author);
 %>
 </feed>
