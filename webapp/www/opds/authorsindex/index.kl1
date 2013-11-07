@@ -38,7 +38,7 @@
 	
 	while (sqlite3_step(stmt) == SQLITE_ROW) {
 		const char* alpha = sqlite3_column_text (stmt, 0);
-		char alpha_html[20];
+		char alpha_html[200];
 		u_urlncpy (alpha_html, alpha, strlen(alpha), URLCPY_ENCODE);
 
 		int count = sqlite3_column_int (stmt, 1);
