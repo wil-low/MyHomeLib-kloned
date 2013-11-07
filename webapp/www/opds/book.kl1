@@ -59,6 +59,5 @@
 	else {
 		err ("Can't execute: %s (%d)\n", sqlite3_errmsg(db_s->db), rc);
 	}
-	sqlite3_finalize (db_s->st_book_file_by_id);
 %>
 

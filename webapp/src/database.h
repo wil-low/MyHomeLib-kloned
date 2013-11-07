@@ -5,8 +5,11 @@ const char UNPACK_DIR[] = "/tmp/kloned";
 const char SELECT_AUTHORS_BY_LETTER[] = 
 	"select substr(SearchName,1,1) as alpha, count(1) from Authors group by substr(SearchName,1,1)";
 
-const char SELECT_AUTHORS_BY_FIRST_LETTER[] = 
-	"select Authors.AuthorID, LastName, FirstName from Authors where substr(SearchName,1,1) = ? order by SearchName";
+const char SELECT_AUTHORS_BY_LETTERS[] = 
+	"select substr(SearchName,1,:count) as alpha, count(1) from Authors where substr(SearchName,1,:count - 1) = :letters  group by substr(SearchName,1,:count)";
+
+const char SELECT_AUTHORS_BY_FIRST_LETTERS[] = 
+	"select Authors.AuthorID, LastName, FirstName from Authors where substr(SearchName,1,?) = ? order by SearchName";
 
 const char SELECT_AUTHOR_BY_ID[] = 
 	"select LastName, FirstName from Authors where AuthorID = ?";
@@ -36,11 +39,11 @@ int server_init()
 		sqlite3_close (db);
 	}
 	prepare_statement (db, &db_s->st_authors_by_letter, SELECT_AUTHORS_BY_LETTER);
-	prepare_statement (db, &db_s->st_authors_by_first_letter, SELECT_AUTHORS_BY_FIRST_LETTER);
+	prepare_statement (db, &db_s->st_authors_by_letters, SELECT_AUTHORS_BY_LETTERS);
+	prepare_statement (db, &db_s->st_authors_by_first_letters, SELECT_AUTHORS_BY_FIRST_LETTERS);
 	prepare_statement (db, &db_s->st_author_by_id, SELECT_AUTHOR_BY_ID);
 	prepare_statement (db, &db_s->st_books_by_author, SELECT_BOOKS_BY_AUTHOR);
 	prepare_statement (db, &db_s->st_book_file_by_id, SELECT_BOOK_FILE_BY_ID);
-	err ("server_init complete %X, %s\n", &db_s, sqlite3_db_filename (db, "main"));
 	mkdir (UNPACK_DIR, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	return 0;
 }
@@ -51,7 +54,7 @@ int server_term()
 	char syscmd[100];
 	sprintf (syscmd, "rm -rf %s", UNPACK_DIR);
 	system (syscmd);
-	err ("server_term complete\n");
+	//err ("server_term complete\n");
 	return 0;             
 }
 

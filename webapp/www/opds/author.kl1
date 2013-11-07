@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <%!
 	#include "../../../../../webapp/src/globals.h"
-	#include <klapp_conf.h>
 %>
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog"> <id>tag:root:authors</id>
 <%
+	err ("%s", request_get_uri(request));
  	vars_t* vars = request_get_getargs (request);
  	const char* author_id_str = vars_get_value (vars, "id");
  	int author_id = atoi (author_id_str);
@@ -17,8 +17,6 @@
 <title>Книги автора <%= last_name %> <%= first_name %></title>
 <updated>2013-11-05T10:07:28+01:00</updated>
 <icon>/favicon.ico</icon>
-<link href="/opds-opensearch.xml" rel="search" type="application/opensearchdescription+xml" />
-<link href="/opds/search?searchTerm={searchTerms}" rel="search" type="application/atom+xml" />
 <link href="/opds" rel="start" type="application/atom+xml;profile=opds-catalog" />
 <%
 	sqlite3_reset (db_s->st_books_by_author);
@@ -46,7 +44,5 @@
 </entry>
 <%
  	}
- 	sqlite3_finalize (db_s->st_author_by_id);
- 	sqlite3_finalize (db_s->st_books_by_author);
 %>
 </feed>
