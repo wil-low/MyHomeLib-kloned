@@ -22,9 +22,10 @@
 	sqlite3_reset (db_s->st_books_by_author);
 	sqlite3_bind_int (db_s->st_books_by_author, 1, author_id);
 	while (sqlite3_step(db_s->st_books_by_author) == SQLITE_ROW) {
-		char id[20];
+		char id[20], book_size[20];
 		sprintf (id, "%d", sqlite3_column_int (db_s->st_books_by_author, 0));
 		const char* title = sqlite3_column_text (db_s->st_books_by_author, 1);
+		sprintf (book_size, "%d", sqlite3_column_int (db_s->st_books_by_author, 2));
 %>
 <entry> <updated>2013-11-05T10:12:55+01:00</updated>
  <id>tag:book:<%= id %></id>
@@ -39,7 +40,7 @@
  <dc:language>ru</dc:language>
  <dc:format>fb2+zip</dc:format>
  <dc:issued>2010</dc:issued>
- <content type="text/html"></content>
+ <content type="text/html">id <%= id %>, size <%= book_size %></content>
  <link href="/opds/book.kl1?id=<%= id %>" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
 </entry>
 <%

@@ -15,7 +15,7 @@ const char SELECT_AUTHOR_BY_ID[] =
 	"select LastName, FirstName from Authors where AuthorID = ?";
 
 const char SELECT_BOOKS_BY_AUTHOR[] = 
-	"select Books.BookID, Title from Books join Author_List on Books.BookID = Author_List.BookID where AuthorID = ? order by SearchTitle";
+	"select Books.BookID, Title, BookSize from Books join Author_List on Books.BookID = Author_List.BookID where AuthorID = ? order by SearchTitle";
 
 const char SELECT_BOOK_FILE_BY_ID[] = 
 	"select Folder, FileName, Ext from Books where BookID = ?";

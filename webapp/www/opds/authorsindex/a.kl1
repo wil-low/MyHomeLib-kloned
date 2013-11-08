@@ -8,8 +8,10 @@
 	err ("%s", request_get_uri(request));
 	vars_t* vars = request_get_getargs (request);
 
+	int letter_count = 1;
 	const char* letter_count_str = vars_get_value (vars, "c");
-	int letter_count = atoi (letter_count_str);
+	if (letter_count_str)
+		letter_count = atoi (letter_count_str);
 
 	const char* begin_letters = vars_get_value (vars, "b");
 %>

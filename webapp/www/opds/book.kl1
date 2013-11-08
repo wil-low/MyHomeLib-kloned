@@ -6,6 +6,7 @@
 	static database_t db_s_;
 	database_t* db_s = &db_s_;
 %><%
+	err ("%s", request_get_uri(request));
 	vars_t* vars = request_get_getargs (request);
  	const char* book_id_str = vars_get_value (vars, "id");
  	int book_id = atoi (book_id_str);
