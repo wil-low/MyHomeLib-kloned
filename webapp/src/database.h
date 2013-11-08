@@ -4,18 +4,25 @@ const char UNPACK_DIR[] = "/tmp/kloned";
 
 const char SELECT_AUTHORS_BY_LETTER[] = 
 	"select substr(SearchName,1,1) as alpha, count(1) from Authors group by substr(SearchName,1,1)";
-
 const char SELECT_AUTHORS_BY_LETTERS[] = 
 	"select substr(SearchName,1,:count) as alpha, count(1) from Authors where substr(SearchName,1,:count - 1) = :letters  group by substr(SearchName,1,:count)";
-
 const char SELECT_AUTHORS_BY_FIRST_LETTERS[] = 
 	"select Authors.AuthorID, LastName, FirstName, count(BookID) from Authors join Author_List on Authors.AuthorID = Author_List.AuthorID group by Author_List.AuthorID having substr(SearchName,1,?) = ? order by SearchName";
-
 const char SELECT_AUTHOR_BY_ID[] = 
 	"select LastName, FirstName from Authors where AuthorID = ?";
-
 const char SELECT_BOOKS_BY_AUTHOR[] = 
 	"select Books.BookID, Title, BookSize from Books join Author_List on Books.BookID = Author_List.BookID where AuthorID = ? order by SearchTitle";
+
+const char SELECT_SEQUENCES_BY_LETTER[] = 
+	"select substr(SearchSeriesTitle,1,1) as alpha, count(1) from Series group by substr(SearchSeriesTitle,1,1)";
+const char SELECT_SEQUENCES_BY_LETTERS[] = 
+	"select substr(SearchSeriesTitle,1,:count) as alpha, count(1) from Series where substr(SearchSeriesTitle,1,:count - 1) = :letters  group by substr(SearchSeriesTitle,1,:count)";
+const char SELECT_SEQUENCES_BY_FIRST_LETTERS[] = 
+	"select Series.SeriesID, Title, count(BookID) from Series join Books on Series.SeriesID = Books.SeriesID group by Series.SeriesID having substr(SearchSeriesTitle,1,?) = ? order by SearchSeriesTitle";
+const char SELECT_SEQUENCE_BY_ID[] = 
+	"select SeriesTitle from Series where SeriesID = ?";
+const char SELECT_BOOKS_BY_SEQUENCE[] = 
+	"select Books.BookID, Title, BookSize from Books where SeriesID = ? order by SeqNumber, SearchTitle";
 
 const char SELECT_BOOK_FILE_BY_ID[] = 
 	"select Folder, FileName, Ext from Books where BookID = ?";
@@ -43,6 +50,13 @@ int server_init()
 	prepare_statement (db, &db_s->st_authors_by_first_letters, SELECT_AUTHORS_BY_FIRST_LETTERS);
 	prepare_statement (db, &db_s->st_author_by_id, SELECT_AUTHOR_BY_ID);
 	prepare_statement (db, &db_s->st_books_by_author, SELECT_BOOKS_BY_AUTHOR);
+
+	prepare_statement (db, &db_s->st_sequences_by_letter, SELECT_SEQUENCES_BY_LETTER);
+	prepare_statement (db, &db_s->st_sequences_by_letters, SELECT_SEQUENCES_BY_LETTERS);
+	prepare_statement (db, &db_s->st_sequences_by_first_letters, SELECT_SEQUENCES_BY_FIRST_LETTERS);
+	prepare_statement (db, &db_s->st_sequence_by_id, SELECT_SEQUENCE_BY_ID);
+	prepare_statement (db, &db_s->st_books_by_sequence, SELECT_BOOKS_BY_SEQUENCE);
+
 	prepare_statement (db, &db_s->st_book_file_by_id, SELECT_BOOK_FILE_BY_ID);
 	mkdir (UNPACK_DIR, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	return 0;

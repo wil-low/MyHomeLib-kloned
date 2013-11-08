@@ -22,10 +22,17 @@
 	sqlite3_reset (db_s->st_books_by_author);
 	sqlite3_bind_int (db_s->st_books_by_author, 1, author_id);
 	while (sqlite3_step(db_s->st_books_by_author) == SQLITE_ROW) {
-		char id[20], book_size[20];
+		char id[20], book_size_str[20];
 		sprintf (id, "%d", sqlite3_column_int (db_s->st_books_by_author, 0));
 		const char* title = sqlite3_column_text (db_s->st_books_by_author, 1);
-		sprintf (book_size, "%d", sqlite3_column_int (db_s->st_books_by_author, 2));
+		int book_size = sqlite3_column_int (db_s->st_books_by_author, 2);
+		if (book_size >= 1024 * 1024) // > 1Mb
+			sprintf (book_size_str, "%.2f Mb", (float)book_size / (1024 * 1024));
+		else if (book_size >= 1024) // > 1Kb
+			sprintf (book_size_str, "%.2f Kb", (float)book_size / 1024);
+		else
+			sprintf (book_size_str, "%d b", book_size);
+
 %>
 <entry> <updated>2013-11-05T10:12:55+01:00</updated>
  <id>tag:book:<%= id %></id>
@@ -40,7 +47,7 @@
  <dc:language>ru</dc:language>
  <dc:format>fb2+zip</dc:format>
  <dc:issued>2010</dc:issued>
- <content type="text/html">id <%= id %>, size <%= book_size %></content>
+ <content type="text/html">id <%= id %>, <%= book_size_str %></content>
  <link href="/opds/book.kl1?id=<%= id %>" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
 </entry>
 <%
