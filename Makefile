@@ -1,5 +1,7 @@
 KLONE_VERSION ?= 3.1.0
 
+KLONE_DAEMON_NAME = myhomelib-kloned
+
 # webapp content is in webapp/ the current dir
 WEBAPP_DIR = $(CURDIR)/webapp
 WEBAPP_LDFLAGS = -lsqlite3
