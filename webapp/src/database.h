@@ -11,18 +11,18 @@ const char SELECT_AUTHORS_BY_FIRST_LETTERS[] =
 const char SELECT_AUTHOR_BY_ID[] = 
 	"select LastName, FirstName from Authors where AuthorID = ?";
 const char SELECT_BOOKS_BY_AUTHOR[] = 
-	"select Books.BookID, Title, BookSize from Books join Author_List on Books.BookID = Author_List.BookID where AuthorID = ? order by SearchTitle";
+	"select Books.BookID, Title, BookSize, LastName, FirstName from Books join Author_List on Books.BookID = Author_List.BookID join Authors on Authors.AuthorID = Author_List.AuthorID where Author_List.AuthorID = ? order by SearchTitle";
 
 const char SELECT_SEQUENCES_BY_LETTER[] = 
 	"select substr(SearchSeriesTitle,1,1) as alpha, count(1) from Series group by substr(SearchSeriesTitle,1,1)";
 const char SELECT_SEQUENCES_BY_LETTERS[] = 
 	"select substr(SearchSeriesTitle,1,:count) as alpha, count(1) from Series where substr(SearchSeriesTitle,1,:count - 1) = :letters  group by substr(SearchSeriesTitle,1,:count)";
 const char SELECT_SEQUENCES_BY_FIRST_LETTERS[] = 
-	"select Series.SeriesID, Title, count(BookID) from Series join Books on Series.SeriesID = Books.SeriesID group by Series.SeriesID having substr(SearchSeriesTitle,1,?) = ? order by SearchSeriesTitle";
+	"select Series.SeriesID, SeriesTitle, count(BookID) from Series join Books on Series.SeriesID = Books.SeriesID group by Series.SeriesID having substr(SearchSeriesTitle,1,?) = ? order by SearchSeriesTitle";
 const char SELECT_SEQUENCE_BY_ID[] = 
 	"select SeriesTitle from Series where SeriesID = ?";
 const char SELECT_BOOKS_BY_SEQUENCE[] = 
-	"select Books.BookID, Title, BookSize from Books where SeriesID = ? order by SeqNumber, SearchTitle";
+	"select Books.BookID, Title, BookSize, SeqNumber, LastName, FirstName from Books join Author_List on Books.BookID = Author_List.BookID join Authors on Authors.AuthorID = Author_List.AuthorID where SeriesID = ? order by SeqNumber, SearchTitle";
 
 const char SELECT_BOOK_FILE_BY_ID[] = 
 	"select Folder, FileName, Ext from Books where BookID = ?";

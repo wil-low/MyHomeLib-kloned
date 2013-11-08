@@ -20,8 +20,8 @@
 	sqlite3_reset (db_s->st_books_by_sequence);
 	sqlite3_bind_int (db_s->st_books_by_sequence, 1, sequence_id);
 	while (sqlite3_step(db_s->st_books_by_sequence) == SQLITE_ROW) {
-		char id[20], book_size_str[20];
-		sprintf (id, "%d", sqlite3_column_int (db_s->st_books_by_sequence, 0));
+		char id_str[20], book_size_str[20], seq_number_str[20];
+		sprintf (id_str, "%d", sqlite3_column_int (db_s->st_books_by_sequence, 0));
 		const char* title = sqlite3_column_text (db_s->st_books_by_sequence, 1);
 		int book_size = sqlite3_column_int (db_s->st_books_by_sequence, 2);
 		if (book_size >= 1024 * 1024) // > 1Mb
@@ -30,23 +30,25 @@
 			sprintf (book_size_str, "%.2f Kb", (float)book_size / 1024);
 		else
 			sprintf (book_size_str, "%d b", book_size);
-
+		sprintf (seq_number_str, "%d", sqlite3_column_int (db_s->st_books_by_sequence, 3));
+		const char* last_name = sqlite3_column_text (db_s->st_books_by_sequence, 4);
+		const char* first_name = sqlite3_column_text (db_s->st_books_by_sequence, 5);
 %>
 <entry> <updated>2013-11-05T10:12:55+01:00</updated>
- <id>tag:sequence:<%= id %></id>
+ <id>tag:sequence:<%= id_str %></id>
  <title><%= title %></title>
- <author> <name></name>
+ <author> <name><%= last_name %> <%= first_name %></name>
  <uri></uri>
 </author>
  <link href="/opds/author.kl1?id=0" rel="related" type="application/atom+xml"
- 	title="Все книги автора ??" />
+ 	title="Все книги автора <%= last_name %> <%= first_name %>" />
  <category term="Биографии и Мемуары" label="Биографии и Мемуары" />
  <category term="Историческая проза" label="Историческая проза" />
  <dc:language>ru</dc:language>
  <dc:format>fb2+zip</dc:format>
  <dc:issued>2010</dc:issued>
- <content type="text/html">id <%= id %>, <%= book_size_str %></content>
- <link href="/opds/book.kl1?id=<%= id %>" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
+ <content type="text/html">id <%= id_str %>, <%= book_size_str %>, #<%= seq_number_str %></content>
+ <link href="/opds/book.kl1?id=<%= id_str %>" rel="http://opds-spec.org/acquisition/open-access" type="application/fb2+zip" />
 </entry>
 <%
  	}
