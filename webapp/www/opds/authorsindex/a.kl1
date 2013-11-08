@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <%!
 	#include "../../../../../webapp/src/globals.h"
-	#include <klapp_conf.h>
-%>
-<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog"> <id>tag:root:author</id>
+%><feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog"> <id>tag:root:author</id>
 <%
 	err ("%s", request_get_uri(request));
 	vars_t* vars = request_get_getargs (request);
@@ -25,15 +23,16 @@
 	sqlite3_bind_int (stmt, 1, letter_count);
 	sqlite3_bind_text (stmt, 2, begin_letters, -1, SQLITE_STATIC);
 	while (sqlite3_step(stmt) == SQLITE_ROW) {
-		char id[20];
+		char id[20], count[20];
 		sprintf (id, "%d", sqlite3_column_int (stmt, 0));
 		const char* last_name = sqlite3_column_text (stmt, 1);
 		const char* first_name = sqlite3_column_text (stmt, 2);
+		sprintf (count, "%d", sqlite3_column_int (stmt, 3));
 %>
 <entry> <updated>2013-11-05T10:07:29+01:00</updated>
  <id>tag:author:<%= id %></id>
- <title><%= last_name %> <%= first_name %></title>
- <content type="text"></content>
+ <title><%= last_name %>, <%= first_name %></title>
+ <content type="text"><%= count %> книг</content>
  <link href="/opds/author.kl1?id=<%= id %>" type="application/atom+xml;profile=opds-catalog" />
 </entry>
 <%

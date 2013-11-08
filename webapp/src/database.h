@@ -9,7 +9,7 @@ const char SELECT_AUTHORS_BY_LETTERS[] =
 	"select substr(SearchName,1,:count) as alpha, count(1) from Authors where substr(SearchName,1,:count - 1) = :letters  group by substr(SearchName,1,:count)";
 
 const char SELECT_AUTHORS_BY_FIRST_LETTERS[] = 
-	"select Authors.AuthorID, LastName, FirstName from Authors where substr(SearchName,1,?) = ? order by SearchName";
+	"select Authors.AuthorID, LastName, FirstName, count(BookID) from Authors join Author_List on Authors.AuthorID = Author_List.AuthorID group by Author_List.AuthorID having substr(SearchName,1,?) = ? order by SearchName";
 
 const char SELECT_AUTHOR_BY_ID[] = 
 	"select LastName, FirstName from Authors where AuthorID = ?";
