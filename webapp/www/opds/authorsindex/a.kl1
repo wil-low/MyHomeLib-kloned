@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<%!
+<%
+	response_set_content_type (response, "application/atom+xml");
+%><%!
 	#include "../../../../../webapp/src/globals.h"
-%><feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog"> <id>tag:root:author</id>
+%><?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/terms/" xmlns:os="http://a9.com/-/spec/opensearch/1.1/" xmlns:opds="http://opds-spec.org/2010/catalog"> <id>tag:root:author</id>
 <%
 	err ("%s", request_get_uri(request));
 	vars_t* vars = request_get_getargs (request);

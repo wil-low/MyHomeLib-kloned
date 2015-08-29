@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<%
+	response_set_content_type (response, "application/atom+xml");
+%><?xml version="1.0" encoding="utf-8"?>
 <%!
 	#include "../../../../../webapp/src/globals.h"
 %>

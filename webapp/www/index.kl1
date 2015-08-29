@@ -1,50 +1,19 @@
-<%!
-    #include <time.h>
-    #include "../../../../../webapp/src/globals.h"
-    #include <klapp_conf.h>
-%>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru">
+
 <head>
-<title>KLone start page</title>
-<link rel="stylesheet" href="kl.css" type="text/css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Поиск книг | Флибуста</title>
+  <link href="/opds" type="application/atom+xml;profile=opds-catalog" rel="related" />
 </head>
+
 <body>
-
-<blockquote>
-
-<blockquote><table width="750" cellpadding="5"><tr><td bgcolor="white">
-<center>
-<h3>Welcome to KLone (Ver. <%= KLAPP_VERSION %>)!</h3>
-</center>
-</td></tr></table></blockquote>
-<p>
-
-<blockquote><table width="750" cellpadding="5"><tr><td bgcolor="#e0e0ff">
-<% 
-    time_t now = time(0);
-    io_printf(out, "Time: %s", ctime(&now));
-%>
-</td></tr></table></blockquote>
-
-<p>
-
-About KLone:
-<blockquote><table width="750" cellpadding="5"><tr><td bgcolor="#e0e0ff">
-
-<a href="http://www.koanlogic.com/klone/index.html">Info</a><br>
-<a href="http://www.koanlogic.com/klone/features.html">Features</a><br>
-<a href="http://www.koanlogic.com/klone/tut.html">Tutorial</a><br>
-<a href="http://www.koanlogic.com/klone/support.html">Support</a><br>
-<a href="http://wiki.koanlogic.com/doku.php?id=klone">Wiki</a><br>
-<a href="http://github.com/koanlogic/klone">GitHub</a><br>
-
-</td></tr></table></blockquote>
-
-<font size="-1">
-Copyright (c) 2005-2012 by <a href="http://www.koanlogic.com">KoanLogic s.r.l.</a> - All rights reserved.
-</font>
-</blockquote>
-
+<h1 class="title">Поиск книг</h1>
+<div><hr>
+  <form action="/booksearch.kl1">Поиск автора по фамилии: <input name="avt"><input type="submit" value="искать"></form>
+  <form action="/booksearch.kl1">Поиск книги по названию: <input name="book"><input type="submit" value="искать"></form>
+  <form action="/booksearch.kl1">Поиск сериала: <input name="seq"><input type="submit" value="искать"></form>
+  <form action="/booksearch.kl1">Поиск жанра по коду: <input name="genre"><input type="submit" value="искать"></form>
+</div>
 </body>
 </html>
-
